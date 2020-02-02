@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Console_Maker_ExaminationPlatform</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="index.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Console</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="#">Main</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">To be started<span class="sr-only">(current)</span></a></li>
+            <li><a href="#">In progress</a></li>
+            <li><a href="#">Finished</a></li>
+            <li><a href="#">Report</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Candidate</a></li>
+            <li><a href="">Candidates' group</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Examination paper</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="sub-header">To be started</h1>
+            <form id="examInfo" class="form-horizontal">
+              <!--Name-->
+              <div class="form-group">
+                <label class="tit col-sm-2 control-label">Name:</label>
+                <div class="inp col-sm-6">
+                  <input v-bind:value="name" class="form-control" maxlength="40">
+                </div>
+              </div>
+              <!--StartTime-->
+              <div class="form-group">           
+                <label class="tit col-sm-2 control-label">StartTime:</label>
+                <div class='inp input-group date col-sm-6' id='datetimepicker1' style="width: 286px; padding-left: 14.5px">
+                  <input v-bind:value="startTime" type='text' class="form-control"/>
+                  <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+              <!--EndTime-->
+              <div class="form-group">
+                <label class="tit col-sm-2 control-label">EndTime:</label>
+                <div class='inp input-group date col-sm-6' id='datetimepicker2' style="width: 286px; padding-left: 14.5px">
+                  <input v-bind:value="endTime" type='text' class="form-control"/>
+                  <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+              <!--Description-->
+              <div class="form-group">
+                <label class="tit col-sm-2 control-label">Description:</label>
+                <div class="inp col-sm-6">
+                  <textarea class="form-control" v-model="description" style="height: 60px;" maxlength="160" ></textarea>
+                </div>
+              </div>
+              <!--Rule-->
+              <div class="form-group">
+                <label class="tit col-sm-2 control-label">Rule:</label>
+                <div class="inp col-sm-6">
+                  <textarea class="form-control" v-model="rule" style="height: 60px;" maxlength="160" ></textarea>
+                </div>
+              </div>
+              <!--Group-->
+              <div class="form-group">
+                <label class="tit col-sm-2 control-label">Group:</label>
+                <div class="inp col-sm-6">
+                  <select class="form-control" v-model="group">
+                    <option v-for="group in groups">{{ group }}</option>
+                  </select>
+                </div>
+              </div>
+              <!--Paper-->
+              <div class="form-group">
+                <label class="tit col-sm-2 control-label">Paper:</label>
+                <div class="inp col-sm-6">
+                  <select class="form-control" v-model="paper">
+                    <option v-for="paper in papers">{{ paper }}</option>
+                  </select>
+                </div>
+              </div>
+              <!--State-->
+              <div class="form-group">
+                <label class="tit col-sm-2 control-label">State:</label>
+                <label class="inp col-sm-6" style="font-size: large;">{{ state }}</label>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-2 control-label">
+                  <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="back">Back</button>
+                </div>
+                <div class="col-sm-2 control-label">
+                  <button type="submit" class="btn btn-primary" style="width: 100px;" v-on:click="save">Save</button>
+                </div>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment-with-locales.js"></script>
+   <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="../../../host.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
