@@ -1,9 +1,9 @@
-var getExams = "/maker/tobestarted/exams";
+var getExams = "/maker/finished/exams";
 
 var vm = new Vue({
     el: '#examTable',
     data: {
-    exams: Array()
+        exams: Array()
     },
     methods: {
         skip: function(e) {
@@ -15,6 +15,7 @@ var vm = new Vue({
 })
 
 var url = host + getExams;
+
 $.get(url, function(data,status){
     console.log(status);
     if (data["errcode"] == 200) {
@@ -40,7 +41,3 @@ $.get(url, function(data,status){
         console.log(data["errmsg"]);
     }
 });
-
-function create() {
-    window.location.href = "./createexam";
-}

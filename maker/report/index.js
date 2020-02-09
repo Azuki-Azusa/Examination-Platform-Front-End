@@ -1,4 +1,4 @@
-var getExams = "/maker/tobestarted/exams";
+var getExams = "/maker/report/exams";
 
 var vm = new Vue({
     el: '#examTable',
@@ -40,7 +40,3 @@ $.get(url, function(data,status){
         console.log(data["errmsg"]);
     }
 });
-
-function create() {
-    window.location.href = "./createexam";
-}

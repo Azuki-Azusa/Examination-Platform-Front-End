@@ -55,8 +55,8 @@ $(function() {
                 var _this = this;
                 $.post(host + makerRegisterUrl,
                     {
-                        "email" : this.makerEmail,
-                        "password": this.makerPW
+                        "email" : _this.makerEmail,
+                        "password": _this.makerPW
                     },
                     function(data,status){
                         console.log(status);
@@ -64,7 +64,6 @@ $(function() {
                             data = data["data"];
                             // 注册成功
                             if (data["errcode"] == 0) {
-                                console.log(data["session"]);
                                 /*
                                 if (_this.checked) {
                                     // 点选复选框，保存7天
@@ -77,7 +76,8 @@ $(function() {
                                 */
                                 // cookie保存到浏览器关闭
                                 $.cookie('sessionMaker', data["session"]);
-                                makerLogin();
+                                console.log($.cookie('sessionMaker'));
+                                // makerLogin();
                             }
 
                             // 注册失败

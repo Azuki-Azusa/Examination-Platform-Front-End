@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Console_Maker_ExaminationPlatform</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="index.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Console</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="#">Main</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="../../tobestarted">To be started<span class="sr-only">(current)</span></a></li>
+            <li><a href="../../inprogress">In progress</a></li>
+            <li><a href="../../finished">Finished</a></li>
+            <li><a href="../../report">Report</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="../../candidatesgroup">Candidates' group</a></li class="active">
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="..">Examination paper</a></li class="active">
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="sub-header">Edit paper info</h1>
+            <form id="paperInfo" class="form-horizontal">
+              <!--Name-->
+              <div class="form-group">
+                <label class="tit col-sm-3 control-label">Name:</label>
+                <div class="inp col-sm-6">
+                  <input v-bind:value="paper.name" class="form-control" maxlength="40">
+                </div>
+              </div>
+
+              <!--Description-->
+              <div class="form-group">
+                <label class="tit col-sm-3 control-label">Description:</label>
+                <div class="inp col-sm-6">
+                  <textarea class="form-control" v-model="paper.description" style="height: 60px;" maxlength="160" ></textarea>
+                </div>
+              </div>
+
+              <!--Number-->
+              <div class="form-group">
+                <label class="tit col-sm-3 control-label">Total points:</label>
+                <div class="inp col-sm-6">
+                  <input disabled="disabled" v-bind:value="paper.total_potins" class="form-control" maxlength="40">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-2 control-label">
+                  <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="back">Back</button>
+                </div>
+                <div class="col-sm-2 control-label">
+                  <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="save">Save</button>
+                </div>
+                <div class="col-sm-2 control-label">
+                  <button type="button" class="btn btn-primary" style="width: 100px;" data-toggle="modal" data-target="#myModal">Add</button>
+                </div>
+              </div>
+
+              <!--Candidates' Table-->
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Num</th>
+                    <th>Question</th>
+                    <th>Type</th>
+                    <th>Points</th>
+                    <th>Operate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="question in paper.questions">
+                    <td>{{ question.num }}</td >
+                    <td>{{ question.question.question }}</td>
+                    <td>{{ question.type }}</td>
+                    <td>{{ question.points }}</td>
+                    <td>
+                      <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="show($event)" v-bind:id="question.id">Show</button>
+                      <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="remove($event)" v-bind:id="question.id" v-bind:num="question.num">Remove</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              
+              <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                              </button>
+                              <h4 class="modal-title" id="myModalLabel">Add question</h4>
+                          </div>
+                          <div class="modal-body">
+                            <form class="form-horizontal">
+                              <!--num-->
+                              <div class="form-group">
+                                <label class="tit col-sm-3 control-label">Num:</label>
+                                <div class="inp col-sm-6">
+                                  <input type='number' v-model="newQuestion.num" class="form-control" maxlength="40">
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="tit col-sm-3 control-label">Points:</label>
+                                <div class="inp col-sm-6">
+                                  <input type='number' v-model="newQuestion.points" class="form-control" maxlength="40">
+                                </div>
+                              </div>
+
+                              <!--Question-->
+                              <div class="form-group">
+                                <label class="tit col-sm-3 control-label">Question:</label>
+                                <div class="inp col-sm-6">
+                                  <textarea class="form-control" v-model="newQuestion.question.question" style="height: 60px;" maxlength="160" ></textarea>
+                                </div>
+                              </div>
+
+                              <!--Type-->
+                              <div class="form-group">
+                                <label class="tit col-sm-3 control-label">Type:</label>
+                                <div class="inp col-sm-6">
+                                  <select  class="form-control"  v-model="newQuestion.type" @change="getTypeSelected">
+                                    <option value=0>单选题</option>
+                                    <option value=1>多选题</option>
+                                    <option value=2>填空题</option>
+                                    <option value=3>主观题</option>
+                                  </select>
+                                </div>
+                                <button v-if="newQuestion.type == 0 || newQuestion.type == 1" type="button" class="btn btn-primary col-sm-2" v-on:click="addChoice">Add choice</button>
+                              </div>
+
+                              <div class="form-group" v-if="newQuestion.type == 0" v-for="answer in newQuestion.question.answers">
+                                <div class="tit col-sm-3 control-label">
+                                  <input type="radio" v-bind:value="answer.id" v-model="newQuestion.answer">
+                                </div>
+                                <div class="inp col-sm-6">
+                                  <input class="form-control" maxlength="40" v-model="answer.text">
+                                </div>  
+                              </div>
+
+                              <div class="form-group" v-if="newQuestion.type == 1" v-for="answer in newQuestion.question.answers">
+                                <div class="tit col-sm-3 control-label">
+                                  <input type="checkbox" v-bind:value="answer.id" v-model="newQuestion.answer">
+                                </div>
+                                <div class="inp col-sm-6">
+                                  <input class="form-control" maxlength="40" v-model="answer.text">
+                                </div>  
+                              </div>
+
+                              <div class="form-group" v-if="newQuestion.type == 2">
+                                <label class="tit col-sm-3 control-label">Answer:</label>
+                                <div class="inp col-sm-6">
+                                  <input v-model="newQuestion.answer" class="form-control" maxlength="40">
+                                </div>
+                              </div>
+
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary" v-on:click="add">Add</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment-with-locales.js"></script>
+   <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="../../../host.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

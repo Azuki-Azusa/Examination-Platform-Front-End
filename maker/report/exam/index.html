@@ -52,10 +52,10 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="..">To be started<span class="sr-only">(current)</span></a></li>
+            <li><a href="../../tobestarted/">To be started<span class="sr-only">(current)</span></a></li>
             <li><a href="../../inprogress">In progress</a></li>
             <li><a href="../../finished">Finished</a></li>
-            <li><a href="../../report">Report</a></li>
+            <li class="active"><a href="..">Report</a></li class="active">
           </ul>
           <ul class="nav nav-sidebar">
             <li><a href="../../candidatesgroup">Candidates' group</a></li>
@@ -65,20 +65,20 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="sub-header">Edit exam info</h1>
+          <h1 class="sub-header">Exam information</h1>
             <form id="examInfo" class="form-horizontal">
               <!--Name-->
               <div class="form-group">
                 <label class="tit col-sm-2 control-label">Name:</label>
                 <div class="inp col-sm-6">
-                  <input v-model="exam.name" class="form-control" maxlength="40">
+                  <input disabled="disabled" v-model="exam.name" class="form-control" maxlength="40">
                 </div>
               </div>
               <!--StartTime-->
               <div class="form-group">           
                 <label class="tit col-sm-2 control-label">StartTime:</label>
                 <div class='inp input-group date col-sm-6' id='datetimepicker1' style="width: 286px; padding-left: 14.5px">
-                  <input v-bind:value="exam.startTime" type='text' class="form-control"/>
+                  <input disabled="disabled" v-bind:value="exam.startTime" type='text' class="form-control"/>
                   <span class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                   </span>
@@ -88,7 +88,7 @@
               <div class="form-group">
                 <label class="tit col-sm-2 control-label">EndTime:</label>
                 <div class='inp input-group date col-sm-6' id='datetimepicker2' style="width: 286px; padding-left: 14.5px">
-                  <input v-bind:value="exam.endTime" type='text' class="form-control"/>
+                  <input disabled="disabled" v-bind:value="exam.endTime" type='text' class="form-control"/>
                   <span class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                   </span>
@@ -98,21 +98,20 @@
               <div class="form-group">
                 <label class="tit col-sm-2 control-label">Description:</label>
                 <div class="inp col-sm-6">
-                  <textarea class="form-control" v-model="exam.description" style="height: 60px;" maxlength="160" ></textarea>
+                  <textarea disabled="disabled" class="form-control" v-model="exam.description" style="height: 60px;" maxlength="160" ></textarea>
                 </div>
               </div>
               <!--Rule-->
               <div class="form-group">
                 <label class="tit col-sm-2 control-label">Rule:</label>
                 <div class="inp col-sm-6">
-                  <textarea class="form-control" v-model="exam.rule" style="height: 60px;" maxlength="160" ></textarea>
+                  <textarea disabled="disabled" class="form-control" v-model="exam.rule" style="height: 60px;" maxlength="160" ></textarea>
                 </div>
               </div>
-              <!--Group-->
               <div class="form-group">
                 <label class="tit col-sm-2 control-label">Group:</label>
                 <div class="inp col-sm-6">
-                  <select class="form-control" v-model="exam.group">
+                  <select disabled="disabled" class="form-control" v-model="exam.group">
                     <option v-for="group in groups" v-bind:value="group.id">{{ group.name }}</option>
                   </select>
                 </div>
@@ -121,7 +120,7 @@
               <div class="form-group">
                 <label class="tit col-sm-2 control-label">Paper:</label>
                 <div class="inp col-sm-6">
-                  <select class="form-control" v-model="exam.paper">
+                  <select disabled="disabled" class="form-control" v-model="exam.paper">
                     <option v-for="paper in papers" v-bind:value="paper.id">{{ paper.name }}</option>
                   </select>
                 </div>
@@ -136,10 +135,28 @@
                   <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="back">Back</button>
                 </div>
                 <div class="col-sm-2 control-label">
-                  <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="save">Save</button>
+                  <button type="button" class="btn btn-primary" style="width: 250px;" v-on:click="correct">Correct all objective questions</button>
                 </div>
               </div>
             </form>
+            <table class="table table-striped" id="candidateTable">
+              <thead>
+                <tr>
+                  <th>Subjective question number</th>
+                  <th>Progress</th>
+                  <th>Operate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="candidate in candidates">
+                  <td>{{ candidate.id }}</td>
+                  <td>{{ candidate.name }}</td>
+                  <td>
+                    <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="correct($event)" v-bind:id="candidate.id" disabled="disabled">Correct</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
         </div>
       </div>
     </div>

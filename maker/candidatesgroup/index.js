@@ -1,15 +1,15 @@
-var getExams = "/maker/tobestarted/exams";
+var getExams = "/maker/candidatesgroup";
 
 var vm = new Vue({
-    el: '#examTable',
+    el: '#groupTable',
     data: {
-    exams: Array()
+        groups: Array()
     },
     methods: {
         skip: function(e) {
             id = e.currentTarget.getAttribute("id");
             console.log(id);
-            window.location.href = "./exam?id=" + id;
+            window.location.href = "./group?id=" + id;
         }
     }
 })
@@ -21,12 +21,11 @@ $.get(url, function(data,status){
         data = data["data"];
             // 获取成功
             if (data["errcode"] == 0) {
-                exams = data["exams"];
-                exams.sort(function(val1, val2) {
+                groups = data["groups"];
+                groups.sort(function(val1, val2) {
                     return val2.id - val1.id;
                 });
-                console.log(exams);
-                vm.exams = exams;
+                vm.groups = groups;
 
             }
 
@@ -42,5 +41,5 @@ $.get(url, function(data,status){
 });
 
 function create() {
-    window.location.href = "./createexam";
+    window.location.href = "./creategroup";
 }

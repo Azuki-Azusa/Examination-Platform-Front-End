@@ -15,28 +15,23 @@ $(function () {
     picker2.on('dp.change', function (e) {
         picker1.data('DateTimePicker').maxDate(e.date);
     });
+
+
 });
 
 
-var getExam = "/maker/getexam";
-var editExam = "/maker/editexam"
+var createExam = "/maker/createexam";
 var groupPaper = "/maker/grouppaper";
-var id = getQueryVariable("id");
-console.log(id);
-var getExamUrl = host + getExam + "/" + id;
-var editExamUrl = host + editExam;
+var createExamUrl = host + createExam;
 var groupPaperUrl = host + groupPaper;
-
 
 var vm = new Vue({
     el: '#examInfo',
     data: {
         exam : {
-            id: "",
             name: "",
             description: "",
             rule: "",
-            state: "",
             startTime: "",
             endTime: "",
             group: "",
@@ -49,9 +44,10 @@ var vm = new Vue({
         back: function() {
             history.back(-1);
         },
-        save: function() {
+        create: function() {
+            console.log(this.exam);
             var _this = this;
-            $.post(editExamUrl,
+            $.post(createExamUrl,
                 {
                     "exam": _this.exam
                 },
@@ -61,7 +57,7 @@ var vm = new Vue({
                         data = data["data"];
                         if (data["errcode"] == 0) {
                             alert(data["errmsg"]);
-                            location.reload();
+                            history.back(-1);
                         }
 
                         else {
@@ -84,31 +80,6 @@ $(function () {
     $('#datetimepicker2').on('dp.change', function (e) {
         vm.exam.endTime = e.date._d.toJSON().substring(0, 10) + " " + e.date._d.toJSON().substring(11, 16);
     });
-});
-
-$.get(getExamUrl, function(data,status){
-    console.log(status);
-    if (data["errcode"] == 200) {
-        data = data["data"];
-            // 获取成功
-            if (data["errcode"] == 0) {
-                console.log(data);
-                exam = data["exam"];
-                vm.exam = exam;
-                $(function () {
-                    $('#datetimepicker1').data("DateTimePicker").maxDate(exam.endTime);
-                    $('#datetimepicker2').data("DateTimePicker").minDate(exam.startTime);
-                })
-            }
-            // 获取失败
-            else {
-                console.log(data["errmsg"]);
-            }
-    }
-    // 路由失败
-    else {
-        console.log(data["errmsg"]);
-    }
 });
 
 $.get(groupPaperUrl, function(data,status){

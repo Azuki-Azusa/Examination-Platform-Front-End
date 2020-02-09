@@ -51,7 +51,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">To be started<span class="sr-only">(current)</span></a></li>
+            <li><a href="../tobestarted">To be started<span class="sr-only">(current)</span></a></li>
             <li><a href="../inprogress">In progress</a></li>
             <li><a href="../finished">Finished</a></li>
             <li><a href="../report">Report</a></li>
@@ -60,31 +60,27 @@
             <li><a href="../candidatesgroup">Candidates' group</a></li>
           </ul>
           <ul class="nav nav-sidebar">
-            <li><a href="../examinationpaper">Examination paper</a></li>
+            <li class="active"><a href="#">Examination paper</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="sub-header">To be started
+          <h1 class="sub-header">Examination paper
             <button type="button" class="btn btn-primary" style="width: 100px; float:right" onclick="create()">Create</button>
           </h1>
           <div class="table-responsive">
             <table class="table table-striped" id="examTable">
               <thead>
                 <tr>
-                  <th>Exam</th>
-                  <th>Start</th>
-                  <th>End</th>
-                  <th>Group</th>
-                  <th>Paper</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Total points</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="exam in exams" class="tr-link" v-on:click="skip($event)" v-bind:id="exam.id">
                   <td>{{ exam.name }}</td >
-                  <td>{{ exam.startTime }}</td>
-                  <td>{{ exam.endTime }}</td>
-                  <td>{{ exam.group }}</td>
-                  <td>{{ exam.paper }}</td>
+                  <td>{{ exam.description }}</td>
+                  <td>{{ exam.total_points }}</td>
                 </tr>
               </tbody>
             </table>

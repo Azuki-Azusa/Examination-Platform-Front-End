@@ -1,4 +1,4 @@
-var getExams = "/maker/tobestarted/exams";
+var getExams = "/maker/papers";
 
 var vm = new Vue({
     el: '#examTable',
@@ -9,7 +9,7 @@ var vm = new Vue({
         skip: function(e) {
             id = e.currentTarget.getAttribute("id");
             console.log(id);
-            window.location.href = "./exam?id=" + id;
+            window.location.href = "./paper?id=" + id;
         }
     }
 })
@@ -21,12 +21,11 @@ $.get(url, function(data,status){
         data = data["data"];
             // 获取成功
             if (data["errcode"] == 0) {
-                exams = data["exams"];
-                exams.sort(function(val1, val2) {
+                papers = data["papers"];
+                papers.sort(function(val1, val2) {
                     return val2.id - val1.id;
                 });
-                console.log(exams);
-                vm.exams = exams;
+                vm.exams = papers;
 
             }
 
@@ -42,5 +41,5 @@ $.get(url, function(data,status){
 });
 
 function create() {
-    window.location.href = "./createexam";
+    window.location.href = "./createpaper";
 }

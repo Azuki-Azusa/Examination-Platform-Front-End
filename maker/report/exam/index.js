@@ -7,26 +7,19 @@ $(function () {
         format: 'YYYY-MM-DD HH:mm',
         locale: moment.locale('zh-cn')
     });
-    //动态设置最小值
-    picker1.on('dp.change', function (e) {
-        picker2.data('DateTimePicker').minDate(e.date);
-    });
-    //动态设置最大值
-    picker2.on('dp.change', function (e) {
-        picker1.data('DateTimePicker').maxDate(e.date);
-    });
 });
 
 
 var getExam = "/maker/getexam";
-var editExam = "/maker/editexam"
-var groupPaper = "/maker/grouppaper";
+var editExam = "/maker/editexam";
+var candidateTable = "/maker/inprogress/candidates";
+var prohibit = "/maker/inprogress/prohibit";
 var id = getQueryVariable("id");
 console.log(id);
 var getExamUrl = host + getExam + "/" + id;
-var editExamUrl = host + editExam;
-var groupPaperUrl = host + groupPaper;
-
+var editExamUrl = host + editExam + "/" + id;
+var candidateTableUrl = host + candidateTable + "/" + id;
+var prohibitUrl = host + prohibit;
 
 var vm = new Vue({
     el: '#examInfo',
@@ -49,7 +42,7 @@ var vm = new Vue({
         back: function() {
             history.back(-1);
         },
-        save: function() {
+        correct: function() {
             var _this = this;
             $.post(editExamUrl,
                 {
@@ -61,7 +54,6 @@ var vm = new Vue({
                         data = data["data"];
                         if (data["errcode"] == 0) {
                             alert(data["errmsg"]);
-                            location.reload();
                         }
 
                         else {
@@ -77,14 +69,48 @@ var vm = new Vue({
     }
 })
 
-$(function () {
-    $('#datetimepicker1').on('dp.change', function (e) {
-        vm.exam.startTime = e.date._d.toJSON().substring(0, 10) + " " + e.date._d.toJSON().substring(11, 16);
-    });
-    $('#datetimepicker2').on('dp.change', function (e) {
-        vm.exam.endTime = e.date._d.toJSON().substring(0, 10) + " " + e.date._d.toJSON().substring(11, 16);
-    });
-});
+var vm2 = new Vue({
+    el: "#candidateTable",
+    data: {
+        candidates: []
+    },
+    methods: {
+        correct: function(e) {
+            candidateid = e.currentTarget.getAttribute("id");
+            candidatename = e.currentTarget.getAttribute("name");
+            examid = id;
+            console.log(examid, candidateid);
+            var _this = this;
+            if (confirm("Confirm to prohibit " + candidatename)) {
+                $.post(prohibitUrl,
+                    {
+                        "examid": examid,
+                        "candidateid": candidateid
+                    },
+                    function(data,status){
+                        console.log(status);
+                        if (data["errcode"] == 200) {
+                            data = data["data"];
+                            if (data["errcode"] == 0) {
+                                alert(data["errmsg"]);
+                                location.reload();
+                            }
+    
+                            else {
+                                alert(data["errmsg"]);
+                            }
+                        }
+                        // 路由失败
+                        else {
+                            alert(data["errmsg"]);
+                        }
+                });
+            }
+        }
+    }
+
+})
+
 
 $.get(getExamUrl, function(data,status){
     console.log(status);
@@ -94,12 +120,16 @@ $.get(getExamUrl, function(data,status){
             if (data["errcode"] == 0) {
                 console.log(data);
                 exam = data["exam"];
+                groups = data["groups"];
+                papers = data["papers"];
                 vm.exam = exam;
+                vm.groups = groups;
+                vm.papers = papers;
                 $(function () {
-                    $('#datetimepicker1').data("DateTimePicker").maxDate(exam.endTime);
                     $('#datetimepicker2').data("DateTimePicker").minDate(exam.startTime);
                 })
             }
+
             // 获取失败
             else {
                 console.log(data["errmsg"]);
@@ -111,17 +141,14 @@ $.get(getExamUrl, function(data,status){
     }
 });
 
-$.get(groupPaperUrl, function(data,status){
+$.get(candidateTableUrl, function(data,status){
     console.log(status);
     if (data["errcode"] == 200) {
         data = data["data"];
             // 获取成功
             if (data["errcode"] == 0) {
                 console.log(data);
-                groups = data["groups"];
-                papers = data["papers"];
-                vm.groups = groups;
-                vm.papers = papers;
+                vm2.candidates = data["candidates"];
             }
             // 获取失败
             else {

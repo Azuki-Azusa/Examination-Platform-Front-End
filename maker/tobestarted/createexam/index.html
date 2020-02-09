@@ -65,7 +65,7 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="sub-header">Edit exam info</h1>
+          <h1 class="sub-header">Create exam</h1>
             <form id="examInfo" class="form-horizontal">
               <!--Name-->
               <div class="form-group">
@@ -126,17 +126,13 @@
                   </select>
                 </div>
               </div>
-              <!--State-->
-              <div class="form-group">
-                <label class="tit col-sm-2 control-label">State:</label>
-                <label class="inp col-sm-6" style="font-size: large;">{{ exam.state }}</label>
-              </div>
+
               <div class="form-group">
                 <div class="col-sm-2 control-label">
                   <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="back">Back</button>
                 </div>
                 <div class="col-sm-2 control-label">
-                  <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="save">Save</button>
+                  <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="create">Create</button>
                 </div>
               </div>
             </form>
