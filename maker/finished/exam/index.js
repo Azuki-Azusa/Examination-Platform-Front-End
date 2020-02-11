@@ -13,10 +13,13 @@ $(function () {
 var getExam = "/maker/getexam";
 var getPaper = "/maker/getpaper";
 var getrandomanswer = "/maker/randomanswer";
+var correct = "/maker/correct";
+var correctAll = "/maker/correctall"
+var finish = "/maker/finish"
 var id = getQueryVariable("id");
 console.log(id);
 var getExamUrl = host + getExam + "/" + id;
-var getPaperUrl = host + getPaper + "/" + id;
+
 
 
 var vm = new Vue({
@@ -42,10 +45,11 @@ var vm = new Vue({
             history.back(-1);
         },
         correct: function() {
+            var correctAllUrl = host + correctAll;
             var _this = this;
-            $.post(editExamUrl,
+            $.post(correctAllUrl,
                 {
-                    "exam": _this.exam
+                    exam_id: _this.exam.id
                 },
                 function(data,status){
                     console.log(status);
@@ -53,8 +57,8 @@ var vm = new Vue({
                         data = data["data"];
                         if (data["errcode"] == 0) {
                             alert(data["errmsg"]);
+                            location.reload();
                         }
-
                         else {
                             alert(data["errmsg"]);
                         }
@@ -66,7 +70,29 @@ var vm = new Vue({
                 });
         },
         finish: function() {
-            
+            var finishUrl = host + finish;
+            var _this = this;
+            $.post(finishUrl,
+                {
+                    exam_id: _this.exam.id
+                },
+                function(data,status){
+                    console.log(status);
+                    if (data["errcode"] == 200) {
+                        data = data["data"];
+                        if (data["errcode"] == 0) {
+                            alert(data["errmsg"]);
+                            history.back(-1);
+                        }
+                        else {
+                            alert(data["errmsg"]);
+                        }
+                    }
+                    // 路由失败
+                    else {
+                        alert(data["errmsg"]);
+                    }
+                });
         }
     }
 })
@@ -83,26 +109,38 @@ var vm2 = new Vue({
         },
         answer: {
             answer: "",
-            answer_id: ""
-        }
+            answer_id: "",
+            question: "",
+            points: 0,
+            _points: 0
+        },
+
     },
     methods: {
         correct: function(e) {
             question_id = e.currentTarget.getAttribute("id");
-            var prohibitUrl = host + prohibit + "/" + question_id;
-            $.get(prohibitUrl, function(data,status){
+            question = e.currentTarget.getAttribute("question");
+            points = e.currentTarget.getAttribute("points");
+            var getrandomanswerUrl = host + getrandomanswer + "/" + question_id;
+            var _this = this;
+            $.get(getrandomanswerUrl, function(data,status){
                 console.log(status);
                 if (data["errcode"] == 200) {
                     data = data["data"];
                         // 获取成功
                         if (data["errcode"] == 0) {
                             console.log(data);
-                            answer = data["answer"];
+                            _this.answer = data["answer"];
+                            _this.answer.question = question;
+                            _this.answer.points = points;
+                            _this.answer._points = 0;
+                            console.log(_this.answer);
                         }
             
                         // 获取失败
                         else {
-                            console.log(data["errmsg"]);
+                            alert(data["errmsg"]);
+                            $('#myModal').modal("hide");
                         }
                 }
                 // 路由失败
@@ -110,6 +148,37 @@ var vm2 = new Vue({
                     console.log(data["errmsg"]);
                 }
             });
+        },
+        up: function() {
+            if (confirm("确定给分：" + this.answer._points)) {
+                var correctUrl = host + correct;
+                var _this = this;
+                $.post(correctUrl,
+                    {
+                        answer_id: _this.answer.answer_id,
+                        points: _this.answer._points
+                    },
+                    function(data,status){
+                        console.log(status);
+                        if (data["errcode"] == 200) {
+                            data = data["data"];
+                            if (data["errcode"] == 0) {
+                                alert(data["errmsg"]);
+                                $('#myModal').modal("hide");
+                            }
+                            else {
+                                alert(data["errmsg"]);
+                            }
+                        }
+                        // 路由失败
+                        else {
+                            alert(data["errmsg"]);
+                        }
+                    });
+            }
+            else {
+
+            }
         }
     }
 
@@ -129,40 +198,42 @@ $.get(getExamUrl, function(data,status){
                 vm.exam = exam;
                 vm.groups = groups;
                 vm.papers = papers;
-            }
 
-            // 获取失败
-            else {
-                console.log(data["errmsg"]);
-            }
-    }
-    // 路由失败
-    else {
-        console.log(data["errmsg"]);
-    }
-});
-
-$.get(getPaperUrl, function(data,status){
-    console.log(status);
-    if (data["errcode"] == 200) {
-        data = data["data"];
-            // 获取成功
-            if (data["errcode"] == 0) {
-                console.log(data);
-                var paper = data["paper"];
-                var qs = [];
-                for (var i = 0; i < paper.questions.length; i ++) {
-                    if (paper.questions[i].type == 3) {
-                        qs.push(paper.questions[i]);
+                
+                var getPaperUrl = host + getPaper + "/" + vm.exam.paper;
+                $.get(getPaperUrl, function(data,status){
+                    console.log(status);
+                    if (data["errcode"] == 200) {
+                        data = data["data"];
+                            // 获取成功
+                            if (data["errcode"] == 0) {
+                                console.log(data);
+                                var paper = data["paper"];
+                                var qs = [];
+                                for (var i = 0; i < paper.questions.length; i ++) {
+                                    if (paper.questions[i].type == 3) {
+                                        qs.push(paper.questions[i]);
+                                    }
+                                }
+                                qs.sort(function (val1, val2) {
+                                    return val1.num - val2.num;
+                                });
+                                vm2.paper = paper;
+                                vm2.paper.questions = qs;
+                                console.log(vm2.paper);
+                            }
+                            // 获取失败
+                            else {
+                                console.log(data["errmsg"]);
+                            }
                     }
-                }
-                qs.sort(function (val1, val2) {
-                    return val1.num - val2.num;
+                    // 路由失败
+                    else {
+                        console.log(data["errmsg"]);
+                    }
                 });
-                vm2.paper = paper;
-                vm2.paper.questions = qs;
-                console.log(vm2.paper);
             }
+
             // 获取失败
             else {
                 console.log(data["errmsg"]);
@@ -173,3 +244,4 @@ $.get(getPaperUrl, function(data,status){
         console.log(data["errmsg"]);
     }
 });
+

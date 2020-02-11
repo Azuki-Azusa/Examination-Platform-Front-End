@@ -99,7 +99,6 @@ $(function() {
     new Vue({
         el: '#candidate',
         data: {
-            examID: "",
             candidateID: "",
             candidatePW: "",
             checked: false,
@@ -109,7 +108,7 @@ $(function() {
         methods: {
             login: function() {
                 var _this = this;
-                var url = host + candidateLoginUrl + "/" + this.examID + "/" + this.candidateID + "/" + this.candidatePW
+                var url = host + candidateLoginUrl + "/" + this.candidateID + "/" + this.candidatePW
                 $.get(url, function(data,status){
                     console.log(status);
                     if (data["errcode"] == 200) {

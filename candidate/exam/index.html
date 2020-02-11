@@ -40,39 +40,58 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="#">Main</a></li>
-            <li><a href="..">HomePage</a></li>
+            <li><a href="../..">HomePage</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid">
-      <div class="col">
-        <div class="jumbotron" id="candidateInfo">
-          <h1>{{ candidate }}</h1>
-          <p class="lead">{{ group }}</p>
+      <div class="row" id="questions">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <div class="list-group">
+            <button type="button" v-for="(question, index) in questions" class="list-group-item" v-bind:id="index">{{ question.question.num }}</button>
+          </div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-striped" id="examTable">
-            <thead>
-              <tr>
-                <th>Exam</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Operate</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="exam in exams" v-bind:id="exam.id">
-                <td>{{ exam.name }}</td >
-                <td>{{ exam.startTime }}</td>
-                <td>{{ exam.endTime }}</td>
-                <td>
-                  <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="participate($event)" v-bind:id="exam.id">participate</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="sub-header">{{ name }}
+            <button type="button" class="btn btn-primary" style="float:right; width:100px; margin:5px" v-on:click="commit">commit</button>
+          </h1>
+          <h4>{{ nowTime }} / {{ endTime }} (autocommitted 1min before endTime)</h4>
+          <!--Question-->
+          <form class="form-horizontal">
+            <h2>Question: </h2>
+            <h2>{{ show.typet }}</h2>
+            <h3>{{ show.question }} </h3>
+
+            <br />
+
+            <div v-if="show.type == 0" v-for="answer in show.answers">
+              <input style="width:20px; height:20px" type="radio" v-bind:id="answer.id" v-bind:value="answer.id" v-model="show.answer">
+              <label style="font-size:20px;">{{ answer.text }}</label>
+            </div>
+
+            <br />
+
+            <div v-if="show.type == 1" v-for="answer in show.answers">
+              <input style="width:20px; height:20px" type="checkbox" v-bind:value="answer.id" v-model="show.answer">
+              <label style="font-size:20px;">{{ answer.text }}</label>
+            </div>
+
+            <br />
+
+            <div v-if="show.type == 2">
+              <label style="font-size:20px;">Answer:</label>
+              <input v-model="show.answer" class="form-control" maxlength="40">
+            </div>
+
+            <br />
+
+            <div v-if="show.type == 3">
+              <label style="font-size:20px;">Answer:</label>
+              <textarea class="form-control" v-model="show.answer" style="height: 100px;" maxlength="160" ></textarea>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -81,10 +100,11 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="../host.js"></script>
+    <script src="../../host.js"></script>
     <script src="index.js"></script>
   </body>
 </html>

@@ -19,12 +19,14 @@ $(function () {
 
 
 var getExam = "/maker/getexam";
-var editExam = "/maker/editexam"
+var editExam = "/maker/editexam";
+var removeExam = "/maker/remove";
 var groupPaper = "/maker/grouppaper";
 var id = getQueryVariable("id");
 console.log(id);
 var getExamUrl = host + getExam + "/" + id;
 var editExamUrl = host + editExam;
+var removeExamUrl = host + removeExam;
 var groupPaperUrl = host + groupPaper;
 
 
@@ -62,6 +64,31 @@ var vm = new Vue({
                         if (data["errcode"] == 0) {
                             alert(data["errmsg"]);
                             location.reload();
+                        }
+
+                        else {
+                            alert(data["errmsg"]);
+                        }
+                    }
+                    // 路由失败
+                    else {
+                        alert(data["errmsg"]);
+                    }
+                });
+        },
+        remove: function() {
+            var _this = this;
+            $.post(removeExamUrl,
+                {
+                    exam_id: _this.exam.id
+                },
+                function(data,status){
+                    console.log(status);
+                    if (data["errcode"] == 200) {
+                        data = data["data"];
+                        if (data["errcode"] == 0) {
+                            alert(data["errmsg"]);
+                            history.back(-1);
                         }
 
                         else {

@@ -41,8 +41,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="#">Main</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a href="../../..">HomePage</a></li>
           </ul>
         </div>
       </div>
@@ -130,30 +129,35 @@
                 <label class="tit col-sm-2 control-label">State:</label>
                 <label class="inp col-sm-6" style="font-size: large;">{{ exam.state }}</label>
               </div>
+
+              <!--Points-->
+              <div class="form-group">
+                <label class="tit col-sm-2 control-label">Point:</label>
+                <label class="inp col-sm-6" style="font-size: large;">{{ exam.points }}</label>
+              </div>
+              
               <div class="form-group">
                 <div class="col-sm-2 control-label">
                   <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="back">Back</button>
                 </div>
-                <div class="col-sm-2 control-label">
-                  <button type="button" class="btn btn-primary" style="width: 250px;" v-on:click="correct">Correct all objective questions</button>
-                </div>
               </div>
             </form>
+            <div>
+              <h1 class="sub-header">Candidate:</h1>
+            </div>
             <table class="table table-striped" id="candidateTable">
               <thead>
                 <tr>
-                  <th>Subjective question number</th>
-                  <th>Progress</th>
-                  <th>Operate</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Points</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="candidate in candidates">
                   <td>{{ candidate.id }}</td>
                   <td>{{ candidate.name }}</td>
-                  <td>
-                    <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="correct($event)" v-bind:id="candidate.id" disabled="disabled">Correct</button>
-                  </td>
+                  <td>{{ candidate.points }}</td>
                 </tr>
               </tbody>
             </table>

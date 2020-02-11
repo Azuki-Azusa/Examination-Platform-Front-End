@@ -41,8 +41,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="#">Main</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a href="../../..">HomePage</a></li>
           </ul>
         </div>
       </div>
@@ -143,6 +142,11 @@
                 </div>
               </div>
             </form>
+
+            <div>
+              <h1 class="sub-header">Subjective question:</h1>
+            </div>
+
             <table class="table table-striped" id="paperInfo">
               <thead>
                 <tr>
@@ -156,7 +160,43 @@
                   <td>{{ question.num }}</td>
                   <td>{{ question.question.question }}</td>
                   <td>
-                    <button type="button" class="btn btn-primary" style="width: 100px;" v-on:click="correct($event)" v-bind:id="question.id">Correct</button>
+                    <button data-toggle="modal" data-target="#myModal" type="button" class="btn btn-primary" style="width: 100px;" v-on:click="correct($event)" v-bind:id="question.id" v-bind:question="question.question.question" v-bind:points="question.points">
+                      Correct
+                    </button>
+                    <!-- 模态框（Modal） -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        &times;
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">
+                                        批改
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div>原问题：<br />{{ answer.question }}</div>
+                                    <br />
+                                    <div>分值：{{ answer.points }}</div>
+                                    <br />
+                                    <div>回答：<br />{{ answer.answer }}</div>
+                                    <br />
+                                    <div>给分：</div>
+                                    <div>
+                                      <input class="form-control" type="number" v-model="answer._points"/>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                    </button>
+                                    <button type="button" class="btn btn-primary" v-on:click="up">
+                                        提交
+                                    </button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal -->
+                    </div>
                   </td>
                 </tr>
               </tbody>
